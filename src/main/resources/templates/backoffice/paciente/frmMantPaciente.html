@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout::head}">
+    <meta charset="UTF-8">
+    <title>Mantenimiento de Pacientes</title>
+</head>
+<body>
+<script th:src="@{/scripts/web/backoffice/paciente/frmMantPaciente.js}"
+        type="text/javascript"></script>
+<nav th:replace="~{layout::menu}"></nav>
+<div class="card ">
+    <div class="card-header text-bg-dark mb-3">
+        Mantenimiento de Pacientes
+    </div>
+    <div class="card-body">
+        <button id="btnagregar"
+                type="button" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar</button>
+        <hr />
+        <div id="mensaje"></div>
+
+        <table id="tblpaciente" class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">IdPaciente</th>
+                <th scope="col">DNI</th>
+                <th scope="col">Nombres</th>
+                <th scope="col">Apellidos Paterno</th>
+                <th scope="col">Apellidos Materno</th>
+                <th scope="col">Teléfono</th>
+                <th scope="col">Año De Nacimiento</th>
+                <th scope="col">Sexo</th>
+                <th scope="col">Peso</th>
+                <th scope="col">Altura</th>
+                <th scope="col">Tipo de Sangre</th>
+                <th scope="col">Sede</th>
+                <th scope="col">Actualizar</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="paciente :${listaPacientes}">
+                <td th:text="${paciente.idpaciente}"></td>
+                <td th:text="${paciente.dnipa}"></td>
+                <td th:text="${paciente.nombrespa}"></td>
+                <td th:text="${paciente.apellidospa}"></td>
+                <td th:text="${paciente.apellidosmapa}"></td>
+                <td th:text="${paciente.telefonopa}"></td>
+                <td th:text="${#dates.format(paciente.fechanacimientopa, 'yyyy-MM-dd')}"></td>
+                <td th:text="${paciente.sexopa}"></td>
+                <td th:text="${paciente.pesopa}"></td>
+                <td th:text="${paciente.alturapa}"></td>
+                <td th:text="${paciente.tipodesangre.nomsangre}"></td>
+                <td th:text="${paciente.sede.nombresede}"></td>
+                <td>
+                    <button type="button" class="btn btn-info btnactualizar"
+                            th:data-idpaciente="${paciente.idpaciente}"
+                            th:data-dni="${paciente.dnipa}"
+                            th:data-nombres="${paciente.nombrespa}"
+                            th:data-apellidospa="${paciente.apellidospa}"
+                            th:data-apellidosma="${paciente.apellidosmapa}"
+                            th:data-telefono="${paciente.telefonopa}"
+                            th:data-fechanacimientopa="${paciente.fechanacimientopa}"
+                            th:data-sexo="${paciente.sexopa}"
+                            th:data-peso="${paciente.pesopa}"
+                            th:data-altura="${paciente.alturapa}"
+                            th:data-tipodesangre="${paciente.tipodesangre.idtipodesangre}"
+                            th:data-sede="${paciente.sede.idsede}"><i class="fas fa-edit"></i></button>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Modal Registrar / Actualizar Paciente -->
+<div class="modal fade" id="modalNuevo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Paciente</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="txtdni" class="form-label">DNI</label>
+                    <input type="text" class="form-control" id="txtdni">
+                </div>
+                <div class="mb-3">
+                    <label for="txtnombres" class="form-label">Nombres:</label>
+                    <input type="text" class="form-control" id="txtnombres">
+                </div>
+
+                <div class="mb-3">
+                    <label for="txtapellidospa" class="form-label">Apellidos Paterno:</label>
+                    <input type="text" class="form-control" id="txtapellidospa">
+                </div>
+                <div class="mb-3">
+                    <label for="txtapellidosma" class="form-label">Apellidos Materno:</label>
+                    <input type="text" class="form-control" id="txtapellidosma">
+                </div>
+                <div class="mb-3">
+                    <label for="txttelefono" class="form-label">Teléfono:</label>
+                    <input type="text" class="form-control" id="txttelefono">
+                </div>
+                <div class="mb-3">
+                    <label for="txtfechanacimiento" class="form-label">Año de Nacimiento:</label>
+                    <input type="date" class="form-control" id="txtfechanacimiento" value="yyyy-mm-dd">
+                </div>
+                <div class="mb-3">
+                    <label for="txtsexo" class="form-label">Sexo:</label>
+                    <input type="text" class="form-control" id="txtsexo">
+                </div>
+                <div class="mb-3">
+                    <label for="txtpeso" class="form-label">Peso:</label>
+                    <input type="text" class="form-control" id="txtpeso">
+                </div>
+                <div class="mb-3">
+                    <label for="txtaltura" class="form-label">Altura:</label>
+                    <input type="text" class="form-control" id="txtaltura">
+                </div>
+                <div class="mb-3">
+                    <label for="cbotipodesangre" class="form-label">Tipo de Sangre:</label>
+                    <select type="cbotipodesangre" class="form-control" id="cbotipodesangre"></select>
+                </div>
+                <div class="mb-3">
+                    <label for="cbosede" class="form-label">Sede:</label>
+                    <select id="cbosede" class="form-control"></select>
+                </div>
+
+                <input type="hidden" id="hddcodpaciente" value="0">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cancelar</button>
+                <button type="button" id="btnguardar" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
