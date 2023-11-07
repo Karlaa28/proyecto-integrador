@@ -6,7 +6,7 @@ $(document).on("click", "#btnagregar", function(){
     $("#txtapellidosma").val("");
     $("#txttelefono").val("");
     $("#txtfechanacimiento").val("");
-    $("#txtsexo").val("");
+    $('input[name="sexoPa"]').prop('checked', false);
     $("#txtpeso").val("");
     $("#txtaltura").val("");
     $("#cbotipodesangre").empty();
@@ -34,7 +34,16 @@ $(document).on("click", ".btnactualizar", function(){
     $("#txtapellidosma").val($(this).attr("data-apellidosma"));
     $("#txttelefono").val($(this).attr("data-telefono"));
     $("#txtfechanacimiento").val(fechaFormateada);
-    $("#txtsexo").val($(this).attr("data-sexo"));
+
+    var sexo = $(this).attr("data-sexo");
+        if (sexo == "Masculino") {
+            $("#masculino").prop('checked', true);
+            $("#femenino").prop('checked', false);
+        } else if (sexo == "Femenino") {
+            $("#femenino").prop('checked', true);
+            $("#masculino").prop('checked', false);
+        }
+
     $("#txtpeso").val($(this).attr("data-peso"));
     $("#txtaltura").val($(this).attr("data-altura"));
     $("#cbotipodesangre").empty();
@@ -65,7 +74,7 @@ $(document).on("click", "#btnguardar", function(){
             apellidosmapa: $("#txtapellidosma").val(),
             telefonopa: $("#txttelefono").val(),
             fechanacimientopa: $("#txtfechanacimiento").val(),
-            sexopa: $("#txtsexo").val(),
+            sexopa: $('input[name="sexoPa"]:checked').val(),
             pesopa: $("#txtpeso").val(),
             alturapa: $("#txtaltura").val(),
             tipodesangre: $("#cbotipodesangre").val(),
@@ -155,7 +164,8 @@ function listarPacientes() {
                     "data-apellidosma='" + value.apellidosmapa + "'" +
                     "data-telefono='" + value.telefonopa + "'" +
                     "data-fechanacimientopa='" + fechaFormateada + "'" +
-                    "data-sexo='" + value.sexopa + "'" +
+                      // Aquí es donde cambiamos el código para trabajar con los checkboxes
+                                        "data-sexo='" + (value.sexopa == "Masculino" ? "masculino" : "femenino") + "'" +
                     "data-peso='" + value.pesopa + "'" +
                     "data-altura='" + value.alturapa + "'" +
                     "data-tipodesangre='" + value.tipodesangre.idtipodesangre + "'" +

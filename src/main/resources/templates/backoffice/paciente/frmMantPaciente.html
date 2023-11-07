@@ -9,27 +9,27 @@
         type="text/javascript"></script>
 <nav th:replace="~{layout::menu}"></nav>
 <div class="card ">
-    <div class="card-header text-bg-dark mb-3">
+    <div class="card-header text-bg-dark mb-3 text-center">
         Mantenimiento de Pacientes
     </div>
     <div class="card-body">
         <button id="btnagregar"
-                type="button" class="btn btn-primary"><i class="fas fa-plus"></i> Agregar</button>
+                type="button" class="btn btn-primary"><i class="fas fa-plus"></i> Registrar Paciente</button>
         <hr />
         <div id="mensaje"></div>
 
-        <table id="tblpaciente" class="table table-striped">
-            <thead>
+        <table id="tblpaciente" class="table table-striped table-hover text-center">
+            <thead class="bg-dark text-white">
             <tr>
                 <th scope="col">IdPaciente</th>
                 <th scope="col">DNI</th>
                 <th scope="col">Nombres</th>
-                <th scope="col">Apellidos Paterno</th>
-                <th scope="col">Apellidos Materno</th>
+                <th scope="col">Apellido Paterno</th>
+                <th scope="col">Apellido Materno</th>
                 <th scope="col">Teléfono</th>
                 <th scope="col">Año De Nacimiento</th>
                 <th scope="col">Sexo</th>
-                <th scope="col">Peso</th>
+                <th scope="col">Peso (cm)</th>
                 <th scope="col">Altura</th>
                 <th scope="col">Tipo de Sangre</th>
                 <th scope="col">Sede</th>
@@ -81,6 +81,7 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
+
                     <label for="txtdni" class="form-label">DNI</label>
                     <input type="text" class="form-control" id="txtdni">
                 </div>
@@ -105,16 +106,33 @@
                     <label for="txtfechanacimiento" class="form-label">Año de Nacimiento:</label>
                     <input type="date" class="form-control" id="txtfechanacimiento" value="yyyy-mm-dd">
                 </div>
+
                 <div class="mb-3">
-                    <label for="txtsexo" class="form-label">Sexo:</label>
-                    <input type="text" class="form-control" id="txtsexo">
+                    <label>Sexo:</label>
+                    <div class="d-flex align-items-center">
+                        <div class="form-check me-3">
+                            <input class="form-check-input" type="radio" name="sexoPa" id="masculino" value="Masculino">
+                            <label class="form-check-label" for="masculino">
+                                Masculino
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sexoPa" id="femenino" value="Femenino">
+                            <label class="form-check-label" for="femenino">
+                                Femenino
+                            </label>
+                        </div>
+                    </div>
                 </div>
+
+
+
                 <div class="mb-3">
-                    <label for="txtpeso" class="form-label">Peso:</label>
+                    <label for="txtpeso" class="form-label">Peso (kg):</label>
                     <input type="text" class="form-control" id="txtpeso">
                 </div>
                 <div class="mb-3">
-                    <label for="txtaltura" class="form-label">Altura:</label>
+                    <label for="txtaltura" class="form-label">Altura (cm):</label>
                     <input type="text" class="form-control" id="txtaltura">
                 </div>
                 <div class="mb-3">
