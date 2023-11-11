@@ -21,8 +21,8 @@
         <table id="tblpaciente" class="table table-striped table-hover text-center">
             <thead class="bg-dark text-white">
             <tr>
-                <th scope="col">IdPaciente</th>
-                <th scope="col">DNI</th>
+                <th scope="col">TipoDocumento</th>
+                <th scope="col">N° Documento</th>
                 <th scope="col">Nombres</th>
                 <th scope="col">Apellido Paterno</th>
                 <th scope="col">Apellido Materno</th>
@@ -38,32 +38,37 @@
             </thead>
             <tbody>
             <tr th:each="paciente :${listaPacientes}">
-                <td th:text="${paciente.idpaciente}"></td>
-                <td th:text="${paciente.dnipa}"></td>
-                <td th:text="${paciente.nombrespa}"></td>
+                <td th:text="${paciente.tipodocumento.tipodocumento}"></td>
+                <td th:text="${paciente.dni}"></td>
+                <td th:text="${paciente.nombres}"></td>
                 <td th:text="${paciente.apellidospa}"></td>
-                <td th:text="${paciente.apellidosmapa}"></td>
-                <td th:text="${paciente.telefonopa}"></td>
-                <td th:text="${#dates.format(paciente.fechanacimientopa, 'yyyy-MM-dd')}"></td>
-                <td th:text="${paciente.sexopa}"></td>
-                <td th:text="${paciente.pesopa}"></td>
-                <td th:text="${paciente.alturapa}"></td>
+                <td th:text="${paciente.apellidosma}"></td>
+                <td th:text="${paciente.telefono}"></td>
+                <td th:text="${paciente.fechanacimiento}"></td>
+                <td th:text="${paciente.sexo}"></td>
+                <td th:text="${paciente.peso}"></td>
+                <td th:text="${paciente.altura}"></td>
                 <td th:text="${paciente.tipodesangre.nomsangre}"></td>
-                <td th:text="${paciente.sede.nombresede}"></td>
+                <td th:text="${paciente.sede.nomsede}"></td>
                 <td>
                     <button type="button" class="btn btn-info btnactualizar"
                             th:data-idpaciente="${paciente.idpaciente}"
-                            th:data-dni="${paciente.dnipa}"
-                            th:data-nombres="${paciente.nombrespa}"
+                            th:data-tipodocumento="${paciente.tipodocumento.idtipodocumento}"
+                            th:data-dni="${paciente.dni}"
+                            th:data-nombres="${paciente.nombres}"
                             th:data-apellidospa="${paciente.apellidospa}"
-                            th:data-apellidosma="${paciente.apellidosmapa}"
-                            th:data-telefono="${paciente.telefonopa}"
-                            th:data-fechanacimientopa="${paciente.fechanacimientopa}"
-                            th:data-sexo="${paciente.sexopa}"
-                            th:data-peso="${paciente.pesopa}"
-                            th:data-altura="${paciente.alturapa}"
+                            th:data-apellidosma="${paciente.apellidosma}"
+                            th:data-telefono="${paciente.telefono}"
+                            th:data-fechanacimiento="${paciente.fechanacimiento}"
+                            th:data-sexo="${paciente.sexo}"
+                            th:data-peso="${paciente.peso}"
+                            th:data-altura="${paciente.altura}"
+                            th:data-correo="${paciente.correo}"
+                            th:data-contrasena="${paciente.contrasena}"
+                            th:data-tipousuario="${paciente.tipousuario.idtipousuario}"
                             th:data-tipodesangre="${paciente.tipodesangre.idtipodesangre}"
-                            th:data-sede="${paciente.sede.idsede}"><i class="fas fa-edit"></i></button>
+                            th:data-sede="${paciente.sede.idsede}">
+                        <i class="fas fa-edit"></i>
                     </button>
                 </td>
             </tr>
@@ -71,6 +76,7 @@
         </table>
     </div>
 </div>
+
 <!-- Modal Registrar / Actualizar Paciente -->
 <div class="modal fade" id="modalNuevo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -81,7 +87,11 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
+                    <label for="cbotipodocumento" class="form-label">Documento:</label>
+                    <select id="cbotipodocumento" class="form-control"></select>
+                </div>
 
+                <div class="mb-3">
                     <label for="txtdni" class="form-label">DNI</label>
                     <input type="text" class="form-control" id="txtdni">
                 </div>
@@ -104,28 +114,26 @@
                 </div>
                 <div class="mb-3">
                     <label for="txtfechanacimiento" class="form-label">Año de Nacimiento:</label>
-                    <input type="date" class="form-control" id="txtfechanacimiento" value="yyyy-mm-dd">
+                    <input type="date" class="form-control" id="txtfechanacimiento">
                 </div>
 
                 <div class="mb-3">
                     <label>Sexo:</label>
                     <div class="d-flex align-items-center">
                         <div class="form-check me-3">
-                            <input class="form-check-input" type="radio" name="sexoPa" id="masculino" value="Masculino">
+                            <input class="form-check-input" type="radio" name="sexo" id="masculino" value="Masculino">
                             <label class="form-check-label" for="masculino">
                                 Masculino
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="sexoPa" id="femenino" value="Femenino">
+                            <input class="form-check-input" type="radio" name="sexo" id="femenino" value="Femenino">
                             <label class="form-check-label" for="femenino">
                                 Femenino
                             </label>
                         </div>
                     </div>
                 </div>
-
-
 
                 <div class="mb-3">
                     <label for="txtpeso" class="form-label">Peso (kg):</label>
@@ -135,6 +143,22 @@
                     <label for="txtaltura" class="form-label">Altura (cm):</label>
                     <input type="text" class="form-control" id="txtaltura">
                 </div>
+
+                <div class="mb-3">
+                    <label for="txtcorreo" class="form-label">Correo:</label>
+                    <input type="text" class="form-control" id="txtcorreo">
+                </div>
+
+                <div class="mb-3">
+                    <label for="txtcontrasena" class="form-label">Contrasena:</label>
+                    <input type="text" class="form-control" id="txtcontrasena">
+                </div>
+
+                <div class="mb-3">
+                    <label for="cbotipousuario" class="form-label">Tipo Paciente:</label>
+                    <select id="cbotipousuario" class="form-control"></select>
+                </div>
+
                 <div class="mb-3">
                     <label for="cbotipodesangre" class="form-label">Tipo de Sangre:</label>
                     <select type="cbotipodesangre" class="form-control" id="cbotipodesangre"></select>

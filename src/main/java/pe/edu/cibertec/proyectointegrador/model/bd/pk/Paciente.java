@@ -1,13 +1,8 @@
 package pe.edu.cibertec.proyectointegrador.model.bd.pk;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -17,30 +12,42 @@ public class Paciente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idpaciente;
-    @Column(name = "dnipa")
-    private String dnipa;
-    @Column(name = "nombrespa")
-    private String nombrespa;
+    @Column(name = "dni")
+    private String dni;
+    @Column(name = "nombres")
+    private String nombres;
     @Column(name = "apellidospa")
     private String apellidospa;
-    @Column(name = "apellidosmapa")
-    private String apellidosmapa;
-    @Column(name = "telefonopa")
-    private String telefonopa;
-    @Column(name = "fechanacimientopa")
-    private Date fechanacimientopa;
-    @Column(name = "sexopa")
-    private String sexopa;
-    @Column(name = "pesopa")
-    private String pesopa;
-    @Column(name = "alturapa")
-    private String alturapa;
+    @Column(name = "apellidosma")
+    private String apellidosma;
+    @Column(name = "telefono")
+    private String telefono;
+    @Column(name = "fechanacimiento")
+    private String fechanacimiento;
+    @Column(name = "sexo")
+    private String sexo;
+    @Column(name = "peso")
+    private String peso;
+    @Column(name = "altura")
+    private String altura;
+    @Column(name = "correo")
+    private String correo;
+    @Column(name = "contrasena")
+    private String contrasena;
 
     @ManyToOne
-    @JoinColumn(name = "sangreid")
+    @JoinColumn(name = "tipodocumentoid")
+    private TipoDocumento tipodocumento;
+
+    @ManyToOne
+    @JoinColumn(name = "tipodesangreid")
     private TipoDeSangre tipodesangre;
 
     @ManyToOne
     @JoinColumn(name = "sedeid")
     private Sede sede;
+
+    @ManyToOne
+    @JoinColumn(name = "tipousuarioid")
+    private TipoUsuario tipousuario;
 }

@@ -1,82 +1,95 @@
 $(document).on("click", "#btnagregar", function(){
+    $("#cbotipodocumento").empty();
+    $("#cbotipousuario").empty();
+    $("#cbotipodesangre").empty();
+    $("#cbosede").empty();
+
+    listarCboTipoDocumento(0);
+    listarCboTiposDeSangre(0);
+    listarCboSedes(0);
+    listarCboTipoUsuario(0);
+
     $("#hddcodpaciente").val("0");
+
     $("#txtdni").val("");
     $("#txtnombres").val("");
     $("#txtapellidospa").val("");
     $("#txtapellidosma").val("");
     $("#txttelefono").val("");
     $("#txtfechanacimiento").val("");
-    $('input[name="sexoPa"]').prop('checked', false);
+    $('input[name="sexo"]').removeAttr('checked');
     $("#txtpeso").val("");
     $("#txtaltura").val("");
-    $("#cbotipodesangre").empty();
-    $("#cbosede").empty();
-
-    listarCboTiposDeSangre(0);
-    listarCboSedes(0);
+    $("#txtcorreo").val("");
+    $("#txtcontrasena").val("");
 
     // Mostrar el modal
     $("#modalNuevo").modal("show");
 });
 
 $(document).on("click", ".btnactualizar", function(){
-    var fechaParts = $(this).attr("data-fechanacimientopa").substring(0,10).split('-');
-    var fechaNacimiento = new Date(fechaParts[0], fechaParts[1] - 1, fechaParts[2]);
-    var dia = ('0' + fechaNacimiento.getDate()).slice(-2);
-    var mes = ('0' + (fechaNacimiento.getMonth() + 1)).slice(-2);
-    var ano = fechaNacimiento.getFullYear();
-    var fechaFormateada = ano + "-" + mes + "-" + dia;
-
     $("#hddcodpaciente").val($(this).attr("data-idpaciente"));
+    $("#cbotipousuario").empty();
+    $("#cbotipodesangre").empty();
+    $("#cbosede").empty();
+    $("#cbotipodocumento").empty();
+
+    // Cargar las cbo
+    listarCboTiposDeSangre($(this).attr("data-tipodesangre"));
+    listarCboSedes($(this).attr("data-sede"));
+    listarCboTipoDocumento($(this).attr("data-tipodocumento"));
+    listarCboTipoUsuario($(this).attr("data-tipousuario"));
+
     $("#txtdni").val($(this).attr("data-dni"));
     $("#txtnombres").val($(this).attr("data-nombres"));
     $("#txtapellidospa").val($(this).attr("data-apellidospa"));
     $("#txtapellidosma").val($(this).attr("data-apellidosma"));
     $("#txttelefono").val($(this).attr("data-telefono"));
-    $("#txtfechanacimiento").val(fechaFormateada);
+    $("#txtfechanacimiento").val($(this).attr("data-fechanacimiento"));
 
-    var sexo = $(this).attr("data-sexo");
-        if (sexo == "Masculino") {
-            $("#masculino").prop('checked', true);
-            $("#femenino").prop('checked', false);
-        } else if (sexo == "Femenino") {
-            $("#femenino").prop('checked', true);
-            $("#masculino").prop('checked', false);
-        }
+     var sexo = $(this).attr("data-sexo");
+     if (sexo.toLowerCase() == "masculino") {
+         $("#masculino").attr('checked', 'checked');
+     } else if (sexo.toLowerCase() == "femenino") {
+         $("#femenino").attr('checked', 'checked');
+     }
 
     $("#txtpeso").val($(this).attr("data-peso"));
     $("#txtaltura").val($(this).attr("data-altura"));
-    $("#cbotipodesangre").empty();
-    $("#cbosede").empty();
-
-    // Cargar las sedes en el combo
-    listarCboTiposDeSangre($(this).attr("data-idtipodesangre"));
-
-    // Cargar las sedes en el combo
-    listarCboSedes($(this).attr("data-idsede"));
+    $("#txtcorreo").val($(this).attr("data-correo"));
+    $("#txtcontrasena").val($(this).attr("data-contrasena"));
 
     // Mostrar el modal de actualización de paciente
     $("#modalNuevo").modal("show");
+
+    // Mensajes de consola para depurar
+    //   console.log("Correo:", $(this).attr("data-correo"));
+    //    console.log("Contraseña:", $(this).attr("data-contrasena"));
 });
 
 
-
 $(document).on("click", "#btnguardar", function(){
+    var idpaciente = $("#hddcodpaciente").val();
+    console.log(idpaciente);
     $.ajax({
         type: "POST",
         url: "/paciente/guardar",  // Asegúrate de que la ruta sea la correcta en tu aplicación
         contentType: "application/json",
         data: JSON.stringify({
             idpaciente: $("#hddcodpaciente").val(),
-            dnipa: $("#txtdni").val(),
-            nombrespa: $("#txtnombres").val(),
+            tipodocumento: $("#cbotipodocumento").val(),
+            dni: $("#txtdni").val(),
+            nombres: $("#txtnombres").val(),
             apellidospa: $("#txtapellidospa").val(),
-            apellidosmapa: $("#txtapellidosma").val(),
-            telefonopa: $("#txttelefono").val(),
-            fechanacimientopa: $("#txtfechanacimiento").val(),
-            sexopa: $('input[name="sexoPa"]:checked').val(),
-            pesopa: $("#txtpeso").val(),
-            alturapa: $("#txtaltura").val(),
+            apellidosma: $("#txtapellidosma").val(),
+            telefono: $("#txttelefono").val(),
+            fechanacimiento: $("#txtfechanacimiento").val(),
+            sexo: $('input[name="sexo"]:checked').val(),
+            peso: $("#txtpeso").val(),
+            altura: $("#txtaltura").val(),
+            correo: $("#txtcorreo").val(),
+            contrasena: $("#txtcontrasena").val(),
+            tipousuario: $("#cbotipousuario").val(),
             tipodesangre: $("#cbotipodesangre").val(),
             sede: $("#cbosede").val(),
         }),
@@ -91,6 +104,7 @@ $(document).on("click", "#btnguardar", function(){
 });
 
 
+
 function listarCboSedes(idsede) {
     $.ajax({
         type: "GET",
@@ -99,11 +113,46 @@ function listarCboSedes(idsede) {
         success: function (resultado) {
             $.each(resultado, function (index, value) {
                 $("#cbosede").append(
-                    `<option value="${value.idsede}">${value.nombresede}</option>`
+                    `<option value="${value.idsede}">${value.nomsede}</option>`
                 );
             });
             if (idsede > 0) {
                 $("#cbosede").val(idsede);
+            }
+        }
+    });
+}
+function listarCboTipoDocumento(idtipodocumento) {
+    $.ajax({
+        type: "GET",
+        url: "/tipodocumento/listar", // Asegúrate de que la ruta sea la correcta en tu aplicación
+        dataType: "json",
+        success: function (resultado) {
+            $.each(resultado, function (index, value) {
+                $("#cbotipodocumento").append(
+                    `<option value="${value.idtipodocumento}">${value.tipodocumento}</option>`
+                );
+            });
+            if (idtipodocumento > 0) {
+                $("#cbotipodocumento").val(idtipodocumento);
+            }
+        }
+    });
+}
+
+function listarCboTipoUsuario(idtipousuario) {
+    $.ajax({
+        type: "GET",
+        url: "/tipousuario/listar", // Asegúrate de que la ruta sea la correcta en tu aplicación
+        dataType: "json",
+        success: function (resultado) {
+            $.each(resultado, function (index, value) {
+                $("#cbotipousuario").append(
+                    `<option value="${value.idtipousuario}">${value.nomusuario}</option>`
+                );
+            });
+            if (idtipousuario > 0) {
+                $("#cbotipousuario").val(idtipousuario);
             }
         }
     });
@@ -113,7 +162,7 @@ function listarCboSedes(idsede) {
 function listarCboTiposDeSangre(idtipodesangre) {
     $.ajax({
         type: "GET",
-        url: "/tipodesangre/listars",
+        url: "/tipodesangre/listar",
         dataType: "json",
         success: function (resultado) {
             $.each(resultado, function (index, value) {
@@ -128,7 +177,6 @@ function listarCboTiposDeSangre(idtipodesangre) {
     });
 }
 
-
 function listarPacientes() {
     $.ajax({
         type: "GET",
@@ -137,37 +185,35 @@ function listarPacientes() {
         success: function (resultado) {
             $("#tblpaciente > tbody").html("");
             $.each(resultado, function(index, value) {
-                var fechaNacimiento = new Date(value.fechanacimientopa);
-                var dia = ('0' + fechaNacimiento.getDate()).slice(-2);
-                var mes = ('0' + (fechaNacimiento.getMonth() + 1)).slice(-2);
-                var ano = fechaNacimiento.getFullYear();
-                var fechaFormateada = ano + "-" + mes + "-" + dia;
                 $("#tblpaciente > tbody").append("<tr>" +
-                    "<td>" + value.idpaciente + "</td>" +
-                    "<td>" + value.dnipa + "</td>" +
-                    "<td>" + value.nombrespa + "</td>" +
+                    "<td>" + value.tipodocumento.tipodocumento + "</td>" +
+                    "<td>" + value.dni + "</td>" +
+                    "<td>" + value.nombres + "</td>" +
                     "<td>" + value.apellidospa + "</td>" +
-                    "<td>" + value.apellidosmapa + "</td>" +
-                    "<td>" + value.telefonopa + "</td>" +
-                    "<td>" + fechaFormateada + "</td>" +
-                    "<td>" + value.sexopa + "</td>" +
-                    "<td>" + value.pesopa + "</td>" +
-                    "<td>" + value.alturapa + "</td>" +
+                    "<td>" + value.apellidosma + "</td>" +
+                    "<td>" + value.telefono + "</td>" +
+                    "<td>" + value.fechanacimiento + "</td>" +
+                    "<td>" + value.sexo + "</td>" +
+                    "<td>" + value.peso + "</td>" +
+                    "<td>" + value.altura + "</td>" +
                     "<td>" + value.tipodesangre.nomsangre  + "</td>" +
-                    "<td>" + value.sede.nombresede + "</td>" +
+                    "<td>" + value.sede.nomsede + "</td>" +
                     "<td>" +
                     "<button type='button' class='btn btn-info btnactualizar'" +
-                    "data-idpaciente='" + value.idpaciente + "'" +
-                    "data-dni='" + value.dnipa + "'" +
-                    "data-nombres='" + value.nombrespa + "'" +
+                    "data-idpaciente='"+value.idpaciente+"'"+
+                    "data-tipodocumento='" + value.tipodocumento.idtipodocumento + "'" +
+                    "data-dni='" + value.dni + "'" +
+                    "data-nombres='" + value.nombres + "'" +
                     "data-apellidospa='" + value.apellidospa + "'" +
-                    "data-apellidosma='" + value.apellidosmapa + "'" +
-                    "data-telefono='" + value.telefonopa + "'" +
-                    "data-fechanacimientopa='" + fechaFormateada + "'" +
-                      // Aquí es donde cambiamos el código para trabajar con los checkboxes
-                                        "data-sexo='" + (value.sexopa == "Masculino" ? "masculino" : "femenino") + "'" +
-                    "data-peso='" + value.pesopa + "'" +
-                    "data-altura='" + value.alturapa + "'" +
+                    "data-apellidosma='" + value.apellidosma + "'" +
+                    "data-telefono='" + value.telefono + "'" +
+                    "data-fechanacimiento='" + value.fechanacimiento + "'" +
+                    "data-sexo='" + (value.sexo == "Masculino" ? "masculino" : "femenino") + "'" +
+                    "data-peso='" + value.peso + "'" +
+                    "data-altura='" + value.altura + "'" +
+                    "data-correo='" + value.correo + "'" +
+                    "data-contrasena='" + value.contrasena + "'" +
+                    "data-tipousuario='" + value.tipousuario.idtipousuario + "'" +
                     "data-tipodesangre='" + value.tipodesangre.idtipodesangre + "'" +
                     "data-sede='" + value.sede.idsede + "'>" +
                     "<i class='fas fa-edit'></i></button>" +

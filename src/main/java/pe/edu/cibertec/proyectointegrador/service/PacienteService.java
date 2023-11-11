@@ -2,9 +2,7 @@ package pe.edu.cibertec.proyectointegrador.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import pe.edu.cibertec.proyectointegrador.model.bd.pk.Paciente;
-import pe.edu.cibertec.proyectointegrador.model.bd.pk.Sede;
-import pe.edu.cibertec.proyectointegrador.model.bd.pk.TipoDeSangre;
+import pe.edu.cibertec.proyectointegrador.model.bd.pk.*;
 import pe.edu.cibertec.proyectointegrador.model.request.PacienteRequest;
 import pe.edu.cibertec.proyectointegrador.model.response.ResultadoResponse;
 import pe.edu.cibertec.proyectointegrador.repository.PacienteRepository;
@@ -26,19 +24,28 @@ public class PacienteService {
         Boolean respuesta = true;
         try {
             Paciente objPaciente = new Paciente();
-            if (paciente.getIdpaciente()>0) {
+            if (paciente.getIdpaciente() != null) {
                 objPaciente.setIdpaciente(paciente.getIdpaciente());
-
             }
-            objPaciente.setDnipa(paciente.getDnipa());
-            objPaciente.setNombrespa(paciente.getNombrespa());
+            TipoDocumento tipodocumento = new TipoDocumento();
+            tipodocumento.setIdtipodocumento(paciente.getTipodocumento());
+            objPaciente.setTipodocumento(tipodocumento);
+
+            objPaciente.setDni(paciente.getDni());
+            objPaciente.setNombres(paciente.getNombres());
             objPaciente.setApellidospa(paciente.getApellidospa());
-            objPaciente.setApellidosmapa(paciente.getApellidosmapa());
-            objPaciente.setTelefonopa(paciente.getTelefonopa());
-            objPaciente.setFechanacimientopa(paciente.getFechanacimientopa());
-            objPaciente.setSexopa(paciente.getSexopa());
-            objPaciente.setPesopa(paciente.getPesopa());
-            objPaciente.setAlturapa(paciente.getAlturapa());
+            objPaciente.setApellidosma(paciente.getApellidosma());
+            objPaciente.setTelefono(paciente.getTelefono());
+            objPaciente.setFechanacimiento(paciente.getFechanacimiento());
+            objPaciente.setSexo(paciente.getSexo());
+            objPaciente.setPeso(paciente.getPeso());
+            objPaciente.setAltura(paciente.getAltura());
+            objPaciente.setCorreo(paciente.getCorreo());
+            objPaciente.setContrasena(paciente.getContrasena());
+
+            TipoUsuario tipousuario = new TipoUsuario();
+            tipousuario.setIdtipousuario(paciente.getTipousuario());
+            objPaciente.setTipousuario(tipousuario);
 
             TipoDeSangre tipodesangre = new TipoDeSangre();
             tipodesangre.setIdtipodesangre(paciente.getTipodesangre());
@@ -49,6 +56,7 @@ public class PacienteService {
             objPaciente.setSede(sede);
 
             pacienteRepository.save(objPaciente);
+
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             ex.printStackTrace();  // Imprime la pila de llamadas de la excepción

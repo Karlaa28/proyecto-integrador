@@ -19,7 +19,7 @@ public class TipoDeSangreController {
 
     private TipoDeSangreService tipoDeSangreService;
 
-    @GetMapping("/listars")
+    @GetMapping("/listar")
     @ResponseBody
     public List<TipoDeSangre> listarTipodesangre(){
         return tipoDeSangreService.listarTiposdesangre();
